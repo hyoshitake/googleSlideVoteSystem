@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Google Slide Vote System",
+    "version": "1.0.0",
+    "description": "GoogleSlideの横に投票結果を表示します",
+    "permissions": ["scripting", "storage"],
+    "options_page": "options.html",
+    "action": {
+        "default_icon": "images/slidevote.png"
+    },
+    "content_scripts": [
+      {
+        "js": ["content.js", "socket.io.min.js"],
+        "matches": ["https://docs.google.com/presentation/*"]
+      },
+      {
+        "css": ["content.css"],
+        "matches": ["https://docs.google.com/presentation/*"]
+      }
+    ]
+}

@@ -1,0 +1,20 @@
+<html>
+<head>
+  <title>Vote</title>
+</head>
+<body>
+  <h1>Vote</h1>
+  <input id="voteButton" type="button" value="イイね！">
+  <script type="text/javascript">
+    const socket = io();
+    const button = document.getElementById('voteButton');
+
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+  </script>
+</html>

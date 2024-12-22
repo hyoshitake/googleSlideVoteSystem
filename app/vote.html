@@ -5,16 +5,20 @@
 <body>
   <h1>Vote</h1>
   <input id="voteButton" type="button" value="イイね！">
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
   <script type="text/javascript">
     const socket = io();
+
+    socket.on("connect", () => {
+      socket.emit("join", { roomId: '1', name: 'vote1' });
+    })
+
     const button = document.getElementById('voteButton');
 
     button.addEventListener('click', (e) => {
       e.preventDefault();
-      if (input.value) {
-        socket.emit('chat message', input.value);
-        input.value = '';
-      }
+      socket.emit('post', 'vote');
+      console.log('vote');
     });
   </script>
 </html>

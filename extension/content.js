@@ -1,4 +1,21 @@
 console.log("Google Slide投票システム: content.js loaded");
+let socket
+
+const countUp = () => {
+  // 投票をカウントする
+  const voteBar = document.querySelector(".vote-bar");
+  if (voteBar) {
+    const voteBarItems = voteBar.querySelectorAll(".vote-bar__item.not-active");
+
+    // 未投票のバーがなければ処理をしない
+    if (!voteBarItems || voteBarItems.length === 0) {
+      return;
+    }
+
+    // 最後のバーをactiveにする
+    voteBarItems[voteBarItems.length - 1].classList.remove("not-active");
+  }
+}
 
 // iframeにショートカットキーを設定する
 // ※Chrome拡張機能にショートカットキーを設定できるらしく、そっちで実現すればよかったと後で後悔しました。とほほ。
@@ -22,20 +39,9 @@ const setKeyEvent = (node) => {
         iframeElement.classList.toggle("counter-view")
       }
 
+      // Ctrl + Kでカウントアップ
       if (event.ctrlKey && event.key === 'k') {
-        // 投票をカウントする
-        const voteBar = document.querySelector(".vote-bar");
-        if (voteBar) {
-          const voteBarItems = voteBar.querySelectorAll(".vote-bar__item.not-active");
-
-          // 未投票のバーがなければ処理をしない
-          if (!voteBarItems || voteBarItems.length === 0) {
-            return;
-          }
-
-          // 最後のバーをactiveにする
-          voteBarItems[voteBarItems.length - 1].classList.remove("not-active");
-        }
+        countUp();
       }
     });
     console.log("Google Slide投票システム：iframe key event added");
@@ -100,9 +106,17 @@ const login = async () => {
   }
 
   // ルームに入る
-  const socket = io('https://handsup-seminar.onrender.com');
-  console.log(socket)
-}
+  socket = io('http://localhost:13000');
+  // socket = io('https://handsup-seminar.onrender.com');
 
+  socket.on("connect", () => {
+    const ret = socket.emit("join", { roomId: '1', name: 'testGoogle2' });
+    console.log(ret)
+  })
+
+  socket.on("message", (msg) => {
+    countUp();
+  })
+}
 
 login()

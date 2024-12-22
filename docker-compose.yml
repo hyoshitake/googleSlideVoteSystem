@@ -3,7 +3,7 @@ services:
   app:
     build: .
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production node server.js
     volumes:
       - .\app:/usr/src/app
       # - /usr/src/app/node_modules

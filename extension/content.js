@@ -106,8 +106,8 @@ const login = async () => {
   }
 
   // ルームに入る
-  socket = io('http://localhost:13000');
-  // socket = io('https://handsup-seminar.onrender.com');
+  // socket = io('http://localhost:13000');
+  socket = io('https://googleslidevotesystem.onrender.com');
 
   socket.on("connect", () => {
     const ret = socket.emit("join", { roomId: '1', name: 'testGoogle2' });

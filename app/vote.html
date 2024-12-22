@@ -1,20 +1,169 @@
 <html>
 <head>
   <title>Vote</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <h1>Vote</h1>
-  <input id="voteButton" type="button" value="イイね！">
+  <div style="text-align: center;">
+    <audio id="audio" src="./audio/post"></audio>
+    <div style="font-size: 5rem">投票する</div>
+    <div style="margin-top: 20px;">
+      <a class="btn-emergency" id="voteButton">
+        <span class="btn-emergency-bottom"></span>
+        <span class="btn-emergency-top"><span>押す</span></span>
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
   <script type="text/javascript">
+    // URLパラメータからRoomCodeを取得する
+    let params = new URLSearchParams(document.location.search)
+    let roomCode = params.get("room")
+
     const socket = io();
+
+    socket.on("connect", () => {
+      socket.emit("join", { roomCode: roomCode });
+    })
+
     const button = document.getElementById('voteButton');
 
     button.addEventListener('click', (e) => {
       e.preventDefault();
-      if (input.value) {
-        socket.emit('chat message', input.value);
-        input.value = '';
-      }
+      socket.emit('post', { roomCode: roomCode });
+      try {
+        // 初回は失敗するのでtry-catchで囲む
+        audio.load();
+      }catch(e){}
+      audio.play(); //audioを再生
     });
   </script>
+  <style>
+    html {
+      touch-action: manipulation;
+    }
+
+    *,
+    *:before,
+    *:after {
+      -webkit-box-sizing: inherit;
+      box-sizing: inherit;
+    }
+
+    html {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      font-size: 62.5%;
+    }
+
+    .btn,
+    a.btn,
+    button.btn {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.5;
+      position: relative;
+      display: inline-block;
+      padding: 1rem 4rem;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      text-align: center;
+      vertical-align: middle;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      color: #212529;
+      border-radius: 0.5rem;
+    }
+
+    a.btn-emergency {
+      position: relative;
+
+      display: block;
+
+      width: 200px;
+      height: 130px;
+      margin: 0 auto;
+    }
+
+    a.btn-emergency:hover .btn-emergency-top {
+      top: 10px;
+
+      height: 50px;
+    }
+
+    a.btn-emergency:active .btn-emergency-top {
+      top: 20px;
+
+      height: 40px;
+    }
+
+    .btn-emergency-top {
+      position: absolute;
+      top: 0;
+      left: 20px;
+
+      width: 160px;
+      height: 60px;
+      margin-top: 30px;
+
+      -webkit-transition: all 0.3s;
+
+      transition: all 0.3s;
+
+      border-radius: 0 0 50% 50%;
+      background: #d62d2d;
+    }
+
+    .btn-emergency-top:before {
+      position: absolute;
+      top: -30px;
+      left: 0;
+
+      width: 160px;
+      height: 60px;
+
+      content: "";
+
+      border-radius: 80px / 30px;
+      background: #ed4c4c;
+    }
+
+    .btn-emergency-top span {
+      font-size: 38px;
+      font-weight: bold;
+
+      position: absolute;
+      top: -24px;
+      left: 0;
+
+      width: 100%;
+
+      -webkit-transform: scaleY(0.75);
+
+      transform: scaleY(0.75);
+      text-align: center;
+
+      color: #f6a3a3;
+    }
+
+    .btn-emergency-bottom {
+      position: absolute;
+      top: 38px;
+      left: 0;
+
+      width: 200px;
+      height: 80px;
+
+      border-radius: 100px / 40px;
+      background: #d8e4ea;
+      -webkit-box-shadow: 0 8px 0 #c4cacc;
+      box-shadow: 0 8px 0 #c4cacc;
+    }
+  </style>
 </html>

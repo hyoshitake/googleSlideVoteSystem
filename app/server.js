@@ -34,9 +34,9 @@ io.on("connection", (socket) => {
   })
 
   socket.on("post", (msg) => {
-    console.log('received message:');
-    io.to(store.room).emit("message", msg);
-    console.log('broadcasted message:');
+    console.log('received vote:');
+    io.to(store.room).emit("vote", msg);
+    console.log('broadcasted vote:');
   });
 });
 

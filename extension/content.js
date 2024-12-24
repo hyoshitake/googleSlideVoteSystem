@@ -48,6 +48,27 @@ const setKeyEvent = (node) => {
   }, 1000);
 }
 
+// QRコードを作成
+const createQrCode = async (dom) => {
+  // ログイン情報を取得する
+  const roomCode = await getRoomCode();
+  const domain = await getDomain();
+
+  console.log(roomCode)
+  console.log(domain)
+  // ルームコードが設定されていない場合は処理をしない
+  if (!roomCode || !domain) {
+    return;
+  }
+
+  // QRコードの出力先をクリア
+  dom.textContent = '';
+  // QRコード作成
+  new QRCode(dom, {
+    text:  `https://${domain}/vote?room=${roomCode}`,
+  });
+}
+
 const setVoteBar = (node) => {
   // スライドの表示がない場合は処理をしない
   if (!node.classList.contains("punch-full-screen-element")) {
@@ -56,16 +77,30 @@ const setVoteBar = (node) => {
 
   console.log("Google Slide投票システム：full screen element found");
 
-  let child = document.createElement('div');
+  let sideBar = document.createElement('div');
+  sideBar.classList.add("side-bar");
+
+  let qrCode = document.createElement('div');
+  qrCode.classList.add("qr-code");
+  createQrCode(qrCode);
+
+  let voteBar = document.createElement('div');
+
   // バーを100個表示する
   for (let i = 0; i < 20; i++) {
-    child.innerHTML += `<div class="vote-bar__item top20 not-active" />`;
+    voteBar.innerHTML += `<div class="vote-bar__item top20 not-active" />`;
   }
   for (let i = 0; i < 80; i++) {
-    child.innerHTML += `<div class="vote-bar__item not-active" />`;
+    voteBar.innerHTML += `<div class="vote-bar__item not-active" />`;
   }
-  child.classList.add("vote-bar");
-  node.appendChild(child);
+  voteBar.classList.add("vote-bar");
+
+  // サイドバーに要素を追加
+  sideBar.appendChild(qrCode);
+  sideBar.appendChild(voteBar);
+
+  // スライドの横にサイドバーを付ける
+  node.appendChild(sideBar);
 }
 
 // DOMの変更を検知する
@@ -90,31 +125,33 @@ observer.observe(document.body, {
 
 getRoomCode = async () => {
   const data = await chrome.storage.local.get('roomCode')
-  console.log(data)
   return data.roomCode;
+}
+
+getDomain = async () => {
+  const data = await chrome.storage.local.get('domain')
+  return data.domain;
 }
 
 // 設定されたルームコードを使ってログインする
 const login = async () => {
   // ログイン情報を取得する
   const roomCode = await getRoomCode();
-  console.log(roomCode)
+  const domain = await getDomain();
 
   // ルームコードが設定されていない場合は処理をしない
-  if (!roomCode) {
+  if (!roomCode || !domain) {
     return;
   }
 
   // ルームに入る
-  // socket = io('http://localhost:13000');
-  socket = io('https://googleslidevotesystem.onrender.com');
+  socket = io(`https://${domain}`);
 
   socket.on("connect", () => {
-    const ret = socket.emit("join", { roomId: '1', name: 'testGoogle2' });
-    console.log(ret)
+    socket.emit("join", { roomId: roomCode, name: 'slide' });
   })
 
-  socket.on("message", (msg) => {
+  socket.on("vote", (msg) => {
     countUp();
   })
 }

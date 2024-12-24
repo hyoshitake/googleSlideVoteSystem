@@ -2,12 +2,29 @@
   width: calc(100% - 200px) !important;
 }
 
-.vote-bar {
+.side-bar {
   width: 200px !important;
   height: 100%;
   float: right;
   background-color: white;
   border: 1px solid black;
+}
+
+.qr-code {
+  text-align: center;
+  padding: 5px;
+  width: 100% !important;
+  height: 20%;
+}
+
+.qr-code img {
+  height: 100%;
+  display: inline !important;
+}
+
+.vote-bar {
+  width: 100% !important;
+  height: 80%;
 }
 
 .vote-bar__item {

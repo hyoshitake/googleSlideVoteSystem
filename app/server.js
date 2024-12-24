@@ -20,22 +20,15 @@ app.get("/manage", (req, res) => {
   res.sendFile(__dirname + "/manage.html");
 });
 
-let store = {};
 io.on("connection", (socket) => {
   socket.on("join", (msg) => {
-    console.log('received join:' + msg.roomId);
-    userObj = {
-      'room': msg.roomId,
-      'name': msg.name
-    }
-    store = userObj;
-    socket.join(msg.roomId);
-    console.log('joined:' + msg.roomId);
+    console.log('received join:' + msg.roomCode);
+    socket.join(msg.roomCode);
   })
 
   socket.on("post", (msg) => {
     console.log('received vote:');
-    io.to(store.room).emit("vote", msg);
+    io.to(msg.roomCode).emit("vote");
     console.log('broadcasted vote:');
   });
 });

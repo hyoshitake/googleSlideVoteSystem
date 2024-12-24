@@ -65,7 +65,7 @@ const createQrCode = async (dom) => {
   dom.textContent = '';
   // QRコード作成
   new QRCode(dom, {
-    text:  `https://${domain}/vote?room=${roomCode}`,
+    text:  `${domain}/vote?room=${roomCode}`,
   });
 }
 
@@ -145,13 +145,13 @@ const login = async () => {
   }
 
   // ルームに入る
-  socket = io(`https://${domain}`);
+  socket = io(`${domain}`);
 
   socket.on("connect", () => {
-    socket.emit("join", { roomId: roomCode, name: 'slide' });
+    socket.emit("join", { roomCode: roomCode, name: 'slide' });
   })
 
-  socket.on("vote", (msg) => {
+  socket.on("vote", () => {
     countUp();
   })
 }

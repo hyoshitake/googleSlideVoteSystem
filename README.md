@@ -1,20 +1,19 @@
-# handsup_seminar
-ハンズオンセミナーで早く終わったら投稿して褒めてもらうシステム
-
-# 初期構築
-npm installします
-```
-docker-compose build
-docker-compose run --rm app npm install
-```
+# Google Slide Vote System
+Google Slide内で投票を受け付けるシステムです
 
 # 起動方法
 ```
 docker-compose up -d
 ```
 
-http://localhost:3000
+http://localhost:13000
 にアクセスすると使えます。
 
-# 参考
-https://github.com/mitsuYashi/socket-chat
+# 拡張機能
+https://chromewebstore.google.com/detail/google-slide-vote-system/dcgljdgnllohpahcbmgkeeelianlkkfn
+
+# 仕様素材
+忍者ドット絵：https://www.ac-illust.com/main/detail.php?id=22366743
+サウンド：https://soundeffect-lab.info
+  - 演出・アニメ > ビジネス・プレゼン > カーソル移動11
+  - 演出・アニメ > 演出・アニメ > スイッチを押す
